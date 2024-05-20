@@ -20,7 +20,7 @@ public:
 	~ClubMember() {
 	}
 
-	void displayUserInfo() {
+	/*void displayUserInfo() {
 		std::cout << "Name: " << name << ", Age: " << age << ", Email: " << email << std::endl;
-	}
+	}*/
 };
