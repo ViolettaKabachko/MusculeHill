@@ -130,6 +130,7 @@
     <ClCompile Include="MusculeHill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Calendar.h" />
     <ClInclude Include="ClubMember.h" />
     <ClInclude Include="Coach.h" />
     <ClInclude Include="DataBase.h" />
