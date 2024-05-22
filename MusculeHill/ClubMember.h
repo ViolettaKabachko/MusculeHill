@@ -19,6 +19,10 @@ public:
 	}
 	~ClubMember() {
 	}
+	
+	std::string getPassword() {
+		return this->password;
+	}
 
 	/*void displayUserInfo() {
 		std::cout << "Name: " << name << ", Age: " << age << ", Email: " << email << std::endl;
