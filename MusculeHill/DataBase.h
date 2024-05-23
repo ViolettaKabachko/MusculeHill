@@ -7,7 +7,8 @@
 
 class DataBase {
 private:
-	std::map<std::string, ClubMember*> User;
+	std::map<std::string, ClubMember*> Users;
+	std::map<std::string, Coach*> Coaches;
 	//std::map<std::string, std::vector<Date>> Date;
 	int member_amount = 0;
 public:
@@ -31,7 +32,7 @@ public:
 			}
 
 			Coach* coach = new Coach(name, surname, age, email, password, sex, abonement, experience);
-			User.emplace(email, coach);
+			Coaches.emplace(email, coach);
 			member_amount++;
 		}
 		else {
@@ -56,9 +57,9 @@ public:
 		if (sex != 'M' && sex != 'W') {
 			throw new std::exception("zazanulsya");
 		}
-
+		
 		ClubMember* user = new ClubMember(name, surname, age, email, password, sex, abonement);
-		User.emplace(email, user);
+		Users.emplace(email, user);
 		member_amount++;
 	}
 
@@ -69,10 +70,18 @@ public:
 			throw new std::exception("zazanulsya");
 		}
 
-		if (User.count(email) > 0) {
-			if (User[email]->getPassword() == password) {
+		if (Users.count(email) > 0) {
+			if (Users[email]->getPassword() == password) {
 				return true;
 			}
+		}
+		else if (Coaches.count(email) > 0) {
+			if (Coaches[email]->getPassword() == password) {
+				return true;
+			}
+		}
+		else {
+			return false;
 		}
 
 		return false;

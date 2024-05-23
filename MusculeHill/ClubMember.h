@@ -24,6 +24,10 @@ public:
 		return this->password;
 	}
 
+	std::string getEmail() {
+		return this->email;
+	}
+
 	/*void displayUserInfo() {
 		std::cout << "Name: " << name << ", Age: " << age << ", Email: " << email << std::endl;
 	}*/
