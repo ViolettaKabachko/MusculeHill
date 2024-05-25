@@ -20,7 +20,7 @@ int main(){
     base.registrationCoach("Zaza", "Zazovna", 55, "zazochka@gmail.com", "148856", 'W', 1489, true);
     base.registrationUser("Zazina", "Zazinova", 55, "zazinochka@gmail.com", "149856", 'W', true);
 
-    if (base.signIN("zazinochka@gmail.com", "14986")) {
+    if (base.signIN("zazochka@gmail.com", "148856")) {
         std::cout << "successfull signin" << std::endl;
     }
     else {
