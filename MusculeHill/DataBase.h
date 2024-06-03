@@ -9,33 +9,16 @@ using namespace std;
 
 class DataBase {
 private:
-	std::map<std::string, ClubMember*> Users = { {"bibizian@gmail.com", new ClubMember("Slava", "Chkalov", 17, "bibizian@gmail.com", "1010", 'M', true)} };
-	std::map<std::string, Coach*> Coaches;
-	//std::map<std::string, std::vector<Date>> Date;
-	int member_amount = 0;
+	std::map<std::string, ClubMember*> Users = { {"bibizian@gmail.com", new ClubMember("Slava", "Chkalov", 17, "bibizian@gmail.com", "1010", 'M', true, "g@s.com")} };
+	std::map<std::string, Coach*> Coaches = { {"b@b.com", new Coach("Bibo", "Bobo", 43, "b@b.com", "1234567", 'M', true, 3)}};
+	vector<Class> classes = { Class(Date(2024, 6, 3, 18, 0), "b@b.com", "bibizian@gmail.com") };
+	int member_amount = 2;
 public:
 	DataBase() { };
 	void registrationCoach(std::string name, std::string surname, int age, std::string email, std::string password, char sex, int experience, bool abonement) {
-		if (experience > 1488) {
-			if (age < 14 || age > 99) {
-				throw new std::exception("zazanulsya");
-			}
-
-			size_t pos = email.find("@");
-			if (pos == std::string::npos) {
-				throw new std::exception("zazanulsya");
-			}
-
-			if (password.length() < 6) {
-				throw new std::exception("zazanulsya");
-			}
-
-			if (sex != 'M' && sex != 'W') {
-				throw new std::exception("zazanulsya");
-			}
-
+		if (experience > 2) {
 			Coach* coach = new Coach(name, surname, age, email, password, sex, abonement, experience);
-			Coaches.emplace(email, coach);
+			Coaches[email] =  coach;
 			member_amount++;
 		}
 		else {
@@ -43,27 +26,11 @@ public:
 		}
 	}
 
-	void registrationUser(std::string name, std::string surname, int age, std::string email, std::string password, char sex, bool abonement) {
-		if (age < 14 || age > 99) {
-			throw new std::exception("zazanulsya");
-		}
-		
-		size_t pos = email.find("@");
-		if (pos == std::string::npos) {
-			throw new std::exception("zazanulsya");
-		}
-
-		if (password.length() < 6) {
-			throw new std::exception("zazanulsya");
-		}
-
-		if (sex != 'M' && sex != 'W') {
-			throw new std::exception("zazanulsya");
-		}
-		
-		ClubMember* user = new ClubMember(name, surname, age, email, password, sex, abonement);
-		Users.emplace(email, user);
+	void registrationUser(std::string name, std::string surname, int age, std::string email, std::string password, char sex, bool abonement, string coach) {
+		ClubMember* user = new ClubMember(name, surname, age, email, password, sex, abonement, coach);
+		Users[email] =  user;
 		member_amount++;
+		
 	}
 
 	bool signIn(std::string email, std::string password) {
@@ -99,5 +66,29 @@ public:
 		if (Coaches.count(email) > 0)
 			return Coaches[email];
 		return NULL;
+	}
+
+	vector<Class> getClassesByEmail(string email) {
+		vector <Class> res;
+		for (Class cl : this->classes) {
+			if (cl.coach == email || cl.member == email)
+				res.push_back(cl);
+		}
+		return res;
+	}
+	
+	int getEmailAmount(string email) {
+		return this->Coaches.count(email) + this->Users.count(email);
+	}
+
+	vector<string> getCoachesEmail() {
+		vector<string> res;
+		for (auto pair : Coaches)
+			res.push_back(pair.first);
+		return res;
+	}
+
+	void addClass(Class& cl) {
+		this->classes.push_back(cl);
 	}
 };

@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 #include <cstring>
+#include <vector>
+#include "Date.h"
+#include "Class.h"
 
 class ClubMember {
 protected:
@@ -11,15 +14,19 @@ protected:
 	std::string password;
 	char sex;
 	bool abonement_type;
-
+	std::string coach;
 
 public:
-	ClubMember() : name(""), surname(""), age(0), email(""), password(""), sex('M'), abonement_type(false) {};
+	ClubMember() : name(""), surname(""), age(0), email(""), password(""), sex('M'), abonement_type(false), coach("") {};
 
-	ClubMember(std::string firstName, std::string middlename, int userAge,std::string memberEmail ,std::string pASSword, char sexxx, bool abonementType):
-		name(firstName), surname(middlename), age(userAge), email(memberEmail), password(pASSword), sex(sexxx), abonement_type(abonementType) {
+	ClubMember(std::string firstName, std::string middlename, int userAge,std::string memberEmail ,std::string pASSword, char sexxx, bool abonementType, std::string coach):
+		name(firstName), surname(middlename), age(userAge), email(memberEmail), password(pASSword), sex(sexxx), abonement_type(abonementType), coach(coach) {
 	}
 	~ClubMember() {
+	}
+	
+	void setAbonement(bool abonement_type) {
+		this->abonement_type = abonement_type;
 	}
 	
 	std::string getPassword() {
@@ -30,7 +37,11 @@ public:
 		return this->email;
 	}
 
-	/*void displayUserInfo() {
-		std::cout << "Name: " << name << ", Age: " << age << ", Email: " << email << std::endl;
-	}*/
+	std::string getFullName() {
+		return name + " " + surname;
+	}
+
+	std::string getCoach() {
+		return coach;
+	}
 };

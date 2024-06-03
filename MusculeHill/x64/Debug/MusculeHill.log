@@ -1,3 +1,4 @@
 ﻿  MusculeHill.cpp
 C:\Users\admin\Desktop\MusculeHill\MusculeHill\Calendar.h(1,1): warning C4819: Файл содержит символ, который невозможно представить в текущей кодовой странице (936). Чтобы не допустить потери данных, сохраните файл в формате Юникод
+C:\Users\admin\Desktop\MusculeHill\MusculeHill\DataBase.h(81,37): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
   MusculeHill.vcxproj -> C:\Users\admin\Desktop\MusculeHill\x64\Debug\MusculeHill.exe

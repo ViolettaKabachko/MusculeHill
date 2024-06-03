@@ -131,9 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calendar.h" />
+    <ClInclude Include="Class.h" />
     <ClInclude Include="ClubMember.h" />
     <ClInclude Include="Coach.h" />
     <ClInclude Include="DataBase.h" />
+    <ClInclude Include="Date.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
