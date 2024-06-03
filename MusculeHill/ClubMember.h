@@ -14,6 +14,8 @@ protected:
 
 
 public:
+	ClubMember() : name(""), surname(""), age(0), email(""), password(""), sex('M'), abonement_type(false) {};
+
 	ClubMember(std::string firstName, std::string middlename, int userAge,std::string memberEmail ,std::string pASSword, char sexxx, bool abonementType):
 		name(firstName), surname(middlename), age(userAge), email(memberEmail), password(pASSword), sex(sexxx), abonement_type(abonementType) {
 	}

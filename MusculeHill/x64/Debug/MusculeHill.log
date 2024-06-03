@@ -1,2 +1,3 @@
 ﻿  MusculeHill.cpp
-  MusculeHill.vcxproj -> C:\Users\Michail\MusculeHill\x64\Debug\MusculeHill.exe
+C:\Users\admin\Desktop\MusculeHill\MusculeHill\Calendar.h(1,1): warning C4819: Файл содержит символ, который невозможно представить в текущей кодовой странице (936). Чтобы не допустить потери данных, сохраните файл в формате Юникод
+  MusculeHill.vcxproj -> C:\Users\admin\Desktop\MusculeHill\x64\Debug\MusculeHill.exe
