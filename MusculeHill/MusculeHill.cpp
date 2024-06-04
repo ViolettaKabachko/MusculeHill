@@ -5,9 +5,18 @@
 #include <string>
 #include <iostream>
 #include <time.h>
+#include <functional>
 
 using namespace std;
 
+// -- сюда валидэйт
+template <typename T>
+inline void validate(T& var, function<bool(T)> condition, string message) {
+	while (condition(var)) {
+		std::cout << message;
+		std::cin >> var;
+	}
+}
 
 int main()
 {
@@ -29,6 +38,9 @@ int main()
     int choice;
     Class cl;
     vector<Date>::iterator iter;
+    vector<Class> classes;
+    vector<Class>* classes_ptr;
+    vector<Date>* dates;
     db->registrationCoach(
         "Gigachad",
         "Sigma",
@@ -81,10 +93,9 @@ int main()
             case 2:
                 cout << "Do you wanna register as club member or as coach? (1 - coach, 2 - member) " << endl;
                 cin >> answer;
-                while (answer != 1 && answer != 2) {
-                    cout << "Repeat: ";
-                    cin >> answer;
-                }
+
+				validate<short>(answer, [](short answer) {return answer != 1 && answer != 2; }, "Repeat: ");
+
                 cout << "Name: ";
                 cin >> name;
 
@@ -93,39 +104,32 @@ int main()
 
                 cout << "Age: ";
                 cin >> age;
-                while (age < 14 || age > 99) {
-                    cout << "Repeat: ";
-                    cin >> age;
-                }
+
+				validate<int>(age, [](int age) {return age < 14 || age > 99; }, "Repeat: ");
 
                 cout << "Email: ";
                 cin >> email;
-                while (email.find("@") == std::string::npos) {
-                    cout << "Repeat: ";
-                    cin >> email;
-                }
+
+				validate<string>(email, [](string email) {return email.find("@") == std::string::npos; }, "Repeat: ");
 
                 cout << "Sex (M / W): ";
                 cin >> sex;
-                while (sex != 'M' && sex != 'W') {
-                    cout << "Repeat: ";
-                    cin >> sex;
-                }
+
+				validate<char>(sex, [](char sex) {return sex != 'M' && sex != 'W'; }, "Repeat: ");
+
 
                 cout << "Password: ";
                 cin >> password;
-                while (password.length() < 6) {
-                    cout << "Password is too weak ";
-                    cin >> password;
-                }
+
+				validate<string>(password, [](string password) {return password.length() < 6; }, "Password is too weak");
+
                 switch (answer) {
                 case 1:
                     cout << "Experience: ";
                     cin >> experience;
-                    while (experience < 3) {
-                        cout << "Lack of experience, try another: ";
-                        cin >> experience;
-                    }
+
+					validate<int>(experience, [](int experience) {return  experience < 3; }, "Lack of experience try another");
+
                     db->registrationCoach(name,
                         surname,
                         age,
@@ -140,6 +144,7 @@ int main()
                     break;
                 }
                 cout << "Registered successefully" << endl << endl;
+                break;
             default:
                 running = false;
                 break;
@@ -163,15 +168,33 @@ int main()
                     switch (answer) {
                     case 1:
                         cm->setAbonement(true);
+                        cout << "Abonement is bought" << endl << endl;
                         break;
                     case 2:
                         if (db->getClassesByEmail(cm->getEmail()).size() == 0) {
                             cout << "No plannes dates" << endl;
                         }
                         else {
-                            for (Class cl : db->getClassesByEmail(cm->getEmail())) {
-                                cout << "Coach: " << db->getCoachByEmail(cl.coach)->getFullName() << endl;
-                                cout << "Date and time: " << cl.date.get_string() << endl;
+                            classes = db->getClassesByEmail(cm->getEmail());
+                            classes_ptr = db->getClasses();
+                            for (int i = 0; i < classes.size(); i++) {
+                                cout << "-----------" << endl;
+                                cout << i + 1 << endl;
+                                cout << "Coach: " << db->getCoachByEmail(classes[i].coach)->getFullName() << endl;
+                                cout << "Date and time: " << classes[i].date.get_string() << endl;
+                                cout << "-----------" << endl;
+                            }
+                            
+                            cout << "Which class do you want to visit? (0 - to skip) ";
+                            cin >> answer;
+                            validate<short>(answer, [=](short an) {return answer < 0 || answer > classes.size(); }, "Repeat: ");
+                            if (answer == 0)
+                                break;
+                            for (int i = 0; i < classes_ptr->size(); i++) {
+                                if (classes_ptr->operator[](i).coach == classes[answer - 1].coach &&
+                                    classes_ptr->operator[](i).date == classes[answer - 1].date
+                                    && classes_ptr->operator[](i).member == classes[answer - 1].member)
+                                    classes_ptr->operator[](i).status = Attended;
                             }
                         }
                         break;
@@ -181,12 +204,11 @@ int main()
                             cout << "No free dates" << endl;
                         for (int i = 0; i < free_dates->size(); i++)
                             cout << i + 1 << " - " << free_dates->operator[](i).get_string() << endl;
-                        cout << "Choose the date`s number or 0 for skip: ";
+                        cout << "Choose the date`s number (0 to skip): ";
                         cin >> choice;
-                        while (choice < 0 || choice > free_dates->size()) {
-                            cout << "Repeat: ";
-                            cin >> choice;
-                        }
+
+						validate<int>(choice, [=](int choice) {return choice < 0 || choice > free_dates->size(); }, "Repeat: ");
+
                         if (choice != 0) {
                             cl = Class(free_dates->operator[](choice - 1), cm->getCoach(), cm->getEmail());
                             db->addClass(cl);
@@ -208,9 +230,10 @@ int main()
             else {
                 while (is_signed_in) {
                     cout << "1 - check planned classes" << endl
-                        << "2 - add free dates" << endl
-                        << "3 - check free dates" << endl
-                        << "4 - quit" << endl
+                        << "2 - check free dates" << endl
+                        << "3 - add free dates" << endl 
+                        << "4 - delete free dates" << endl
+                        << "5 - quit" << endl
                         << "Your choice: ";
 
                     cin >> answer;
@@ -220,51 +243,68 @@ int main()
                             cout << "No plannes dates" << endl;
                         else {
                             for (Class cl : db->getClassesByEmail(ch->getEmail())) {
+                                cout << "------" << endl;
                                 cout << "Client: " << db->getClubMemberByEmail(cl.member)->getFullName() << endl;
                                 cout << "Date and time: " << cl.date.get_string() << endl;
+                                cout << "------" << endl;
                             }
                         }
                         break;
                     case 2:
-                        cout << "Month: ";
-                        cin >> month;
-                        while (month < 1 || month > 12) {
-                            cout << "Repeat: ";
-                            cin >> month;
-                        }
-
-                        cout << "Day: ";
-                        cin >> day;
-                        while (day < 1 || day > 31) {
-                            cout << "Repeat: ";
-                            cin >> day;
-                        }
-
-                        cout << "Hour: ";
-                        cin >> hour;
-                        while (hour < 0 || hour > 23) {
-                            cout << "Repeat: ";
-                            cin >> hour;
-                        }
-
-                        cout << "Minute: ";
-                        cin >> minute;
-                        while (minute < 0 || minute > 23) {
-                            cout << "Repeat: ";
-                            cin >> minute;
-                        }
-
-                        ch->add_new_free_date(Date(2024, month, day, hour, minute));
-                    case 3:
                         if (ch->getFreeDates()->size() == 0) {
-                            cout << "No free dates" << endl;
+                            cout << "No free dates" << endl << endl;
                             break;
                         }
 
                         for (int i = 0; i < ch->getFreeDates()->size(); i++)
                             cout << i + 1 << " - " << ch->getFreeDates()->operator[](i).get_string() << endl;
                         break;
+                    case 3:
+                        cout << "Month: ";
+                        cin >> month;
+
+						validate<int>(month, [](int month) {return month < 1 || month > 12; }, "Repeat: ");
+
+
+                        cout << "Day: ";
+                        cin >> day;
+
+						validate<int>(day, [](int day) {return day < 1 || day > 31; }, "Repeat: ");
+
+
+                        cout << "Hour: ";
+                        cin >> hour;
+
+						validate<int>(hour, [](int hour) {return hour < 0 || hour > 23; }, "Repeat: ");
+
+
+                        cout << "Minute: ";
+                        cin >> minute;
+
+						validate<int>(minute, [](int minute) {return minute < 0 || minute > 60; }, "Repeat: ");
+
+
+                        ch->add_new_free_date(Date(2024, month, day, hour, minute));
+                        break;
+                   
                     case 4:
+                        if (ch->getFreeDates()->size() == 0) {
+                            cout << "No free dates" << endl << endl;
+                            break;
+                        }
+                        
+                        dates = ch->getFreeDates();
+                        for (int i = 0; i < dates->size(); i++)
+                            cout << i + 1 << " - " << dates->operator[](i).get_string() << endl;
+                        cout << "Which one to delete? ";
+                        cin >> answer;
+                        validate<short>(answer, [=](short an) {return an < 0 || an > dates->size();}, "Repeat: ");
+                        iter = dates->begin();
+                        for (int i = 0; i < answer - 1; i++)
+                            iter++;
+                        dates->erase(iter);
+                        break;
+                    case 5:
                         is_signed_in = false;
                         ch = NULL;
                         break;

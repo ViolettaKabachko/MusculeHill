@@ -71,7 +71,7 @@ public:
 	vector<Class> getClassesByEmail(string email) {
 		vector <Class> res;
 		for (Class cl : this->classes) {
-			if (cl.coach == email || cl.member == email)
+			if (cl.coach == email || cl.member == email && cl.status == Planned)
 				res.push_back(cl);
 		}
 		return res;
@@ -90,5 +90,9 @@ public:
 
 	void addClass(Class& cl) {
 		this->classes.push_back(cl);
+	}
+
+	vector<Class>* getClasses() {
+		return &this->classes;
 	}
 };

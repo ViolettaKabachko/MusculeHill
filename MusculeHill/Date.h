@@ -20,6 +20,14 @@ public :
     Date(int year, int month, int day, int hour, int minute) : year(year), month(month), day(day), hour(hour), minute(minute) {};
 
     std::string get_string() {
-        return std::to_string(day) + "." + std::to_string(month) + "." + std::to_string(year) + " " + std::to_string(hour) + ":" + std::to_string(minute);
+        return (day > 9 ? std::to_string(day) : "0" + std::to_string(day)) + "." +
+            (month > 9 ? std::to_string(month) : "0" + std::to_string(month)) + "." +
+            std::to_string(year) + " " + 
+            (hour > 9 ? std::to_string(hour) : "0" + std::to_string(hour)) + 
+            ":" + (minute > 9 ? std::to_string(minute) : "0" + std::to_string(minute));
+    }
+
+    bool operator==(const Date& other) {
+        return this->day == other.day && this->month == other.month && this->hour == other.hour && this->year == year && this->minute == other.minute;
     }
 };
